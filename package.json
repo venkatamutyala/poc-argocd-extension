@@ -7,8 +7,8 @@
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "watch": "webpack --mode development --watch",
-    "clean": "rm -rf dist",
-    "package": "npm run clean && npm run build && tar -czf extension.tar.gz dist/ backend/"
+    "clean": "rm -rf dist resources",
+    "package": "npm run clean && npm run build && mkdir -p resources/extension-glueops.js && cp dist/extension.js resources/extension-glueops.js/ && tar -czf extension.tar.gz resources/"
   },
   "keywords": [
     "argocd",
