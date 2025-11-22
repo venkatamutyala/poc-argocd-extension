@@ -1,8 +1,17 @@
 // ArgoCD Server-Side Extension Backend
 // This file handles the server-side API proxy calls within the ArgoCD server
 
+/**
+ * Extension backend service handler
+ * @param {object} request - Request object from ArgoCD
+ * @returns {object} Response with metadata
+ */
+exports.init = async function(application) {
+  console.log('GlueOps Extension: Backend initialized for application:', application?.metadata?.name);
+};
+
 // This function will be called by ArgoCD's extension backend framework
-async function handleRequest(req, res) {
+exports.handler = async function handleRequest(req, res) {
   try {
     console.log('GlueOps Extension: Fetching metadata from postman-echo...');
     
@@ -60,6 +69,4 @@ async function handleRequest(req, res) {
       message: error.message
     });
   }
-}
-
-module.exports = { handleRequest };
+};

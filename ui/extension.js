@@ -280,20 +280,22 @@ const styles = {
 };
 
 // Register the extension with ArgoCD
-export const extension = {
-  component: GlueOpsExtension,
-};
-
-export default extension;
+export const component = GlueOpsExtension;
 
 // Register the extension with ArgoCD's extension API
-// This makes the extension appear in the application details page
+// This makes the extension appear in the application summary (next to Last Sync)
 if (window.extensionsAPI) {
-  window.extensionsAPI.registerResourceExtension(
-    GlueOpsExtension,
-    '*',           // Group - all groups
-    'Application', // Kind - Application resources
-    'GlueOps',     // Tab name
-    { icon: 'fa fa-puzzle-piece' } // Icon
-  );
+  // This places the extension in the application summary view
+  ((definition) => {
+    window.extensionsAPI.registerResourceExtension(
+      component,
+      definition.group || '*',
+      definition.kind || 'Application',
+      definition.tabTitle || 'GlueOps'
+    );
+  })({
+    group: '*',
+    kind: 'Application',
+    tabTitle: 'GlueOps'
+  });
 }
