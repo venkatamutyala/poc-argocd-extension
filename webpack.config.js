@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './ui/extension.js',
+  entry: './extension.js',
   output: {
     filename: 'extension.js',
     path: path.resolve(__dirname, 'dist'),
