@@ -282,8 +282,18 @@ const styles = {
 // Register the extension with ArgoCD
 export const extension = {
   component: GlueOpsExtension,
-  // This places the extension at the top of the application details page
-  // next to "Last Sync"
 };
 
 export default extension;
+
+// Register the extension with ArgoCD's extension API
+// This makes the extension appear in the application details page
+if (window.extensionsAPI) {
+  window.extensionsAPI.registerResourceExtension(
+    GlueOpsExtension,
+    '*',           // Group - all groups
+    'Application', // Kind - Application resources
+    'GlueOps',     // Tab name
+    { icon: 'fa fa-puzzle-piece' } // Icon
+  );
+}
