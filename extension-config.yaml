@@ -1,0 +1,31 @@
+# ArgoCD Extension Configuration
+# This file defines how ArgoCD should load and register the GlueOps extension
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-extension-glueops
+  namespace: argocd
+data:
+  extension.yaml: |
+    # Extension name
+    name: glueops
+    
+    # Backend configuration for server-side proxy
+    backend:
+      services:
+        - url: /extensions/glueops
+          # Handler for processing requests
+          handler:
+            module: /tmp/extensions/glueops/backend/server.js
+            function: handleRequest
+    
+    # UI configuration
+    ui:
+      # Where to display the extension
+      # Options: application.details.summary, application.details.tabs
+      location: application.details.summary
+      
+      # JavaScript files to load
+      sources:
+        - resource: /tmp/extensions/glueops/dist/extension.js
