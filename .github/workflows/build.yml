@@ -24,25 +24,21 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: poc-argocd-extension/package.json
 
       - name: Install dependencies
-        working-directory: ./poc-argocd-extension
         run: npm ci
 
       - name: Build extension
-        working-directory: ./poc-argocd-extension
         run: npm run build
 
       - name: Create tarball
-        working-directory: ./poc-argocd-extension
         run: tar -czf extension.tar.gz dist/ backend/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: argocd-extension-glueops
-          path: poc-argocd-extension/extension.tar.gz
+          path: extension.tar.gz
           retention-days: 90
 
       - name: Create Release
