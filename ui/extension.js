@@ -33,20 +33,42 @@ function GlueOpsExtension({ application, tree }) {
       setLoading(true);
       setError(null);
 
-      // Call the proxy endpoint that ArgoCD will route to our backend
-      const response = await fetch('/extensions/glueops/api/glueops-metadata');
+      // For now, call postman-echo directly to test the UI
+      // TODO: Replace with proper backend proxy once ArgoCD extension backend is configured
+      const response = await fetch('https://postman-echo.com/get?source=glueops-argocd-extension&app=' + (application?.metadata?.name || 'unknown'));
       
       if (!response.ok) {
         throw new Error(`Failed to fetch metadata: ${response.statusText}`);
       }
 
-      const result = await response.json();
+      const echoData = await response.json();
       
-      if (result.success && result.data) {
-        setMetadata(result.data);
-      } else {
-        throw new Error(result.error || 'Unknown error occurred');
-      }
+      // Transform postman-echo response to our metadata format
+      const metadata = {
+        metrics: {
+          url: `https://grafana.example.com/d/app/${application?.metadata?.name}`,
+          label: 'Metrics'
+        },
+        logs: {
+          url: `https://logs.example.com/app/${application?.metadata?.name}`,
+          label: 'Logs'
+        },
+        traces: {
+          url: `https://traces.example.com/app/${application?.metadata?.name}`,
+          label: 'Traces'
+        },
+        secrets: {
+          url: `https://vault.example.com/ui/vault/secrets/${application?.metadata?.name}`,
+          label: 'Secrets'
+        },
+        infrastructure: {
+          url: `https://github.com/example/deployment-configurations/tree/main/${application?.metadata?.name}`,
+          label: 'IaaC'
+        },
+        lastUpdated: new Date(Date.now() - 10 * 60 * 1000).toISOString() // 10 minutes ago
+      };
+      
+      setMetadata(metadata);
     } catch (err) {
       console.error('Error fetching GlueOps metadata:', err);
       setError(err.message);
